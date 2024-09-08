@@ -21,13 +21,18 @@ export class AppController {
   @Post('/image/upload')
   @UseInterceptors(FileInterceptor('image'))
   async uploadImage(@UploadedFile() file: Express.Multer.File) {
-    const data = await this.cloudinaryService.uploadFile(file);
-    return {
-      status: HttpStatus.OK,
-      data: {
-        url: data.secure_url,
-      },
-    };
+    try {
+      const data = await this.cloudinaryService.uploadFile(file);
+
+      return {
+        status: HttpStatus.OK,
+        data: {
+          url: data.secure_url,
+        },
+      };
+    } catch (error) {
+      console.error(error);
+    }
   }
   @Get()
   getHello(): string {
