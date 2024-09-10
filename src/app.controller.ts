@@ -9,7 +9,6 @@ import {
 import { AppService } from './app.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CloudinaryService } from './cloudinary/cloudinary.service';
-import { url } from 'inspector';
 
 @Controller()
 export class AppController {

@@ -13,6 +13,14 @@ import { UsersModule } from './users/users.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { config } from './config/config';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
+import { BlogService } from './post/post.service';
+import { PostController } from './post/post.controller';
+import { PostModule } from './post/post.module';
+import { AdminModule } from './admin/admin.module';
+import { CommentService } from './comment/comment.service';
+import { ReplyService } from './reply/reply.service';
+import { CommentController } from './comment/comment.controller';
+import { ReplyController } from './reply/reply.controller';
 
 @Module({
   imports: [
@@ -24,9 +32,22 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
     AuthModule,
     UsersModule,
     CloudinaryModule,
+    PostModule,
+    AdminModule,
   ],
-  controllers: [AppController],
-  providers: [AppService, ConfigService],
+  controllers: [
+    AppController,
+    PostController,
+    CommentController,
+    ReplyController,
+  ],
+  providers: [
+    AppService,
+    ConfigService,
+    BlogService,
+    CommentService,
+    ReplyService,
+  ],
 })
 export class AppModule implements OnModuleInit {
   async onModuleInit() {}
