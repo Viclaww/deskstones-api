@@ -23,7 +23,7 @@ export class Blog extends Document {
   @Prop()
   datePublished: Date;
 
-  @Prop({ default: false })
+  @Prop({ default: true })
   inReview: boolean;
 
   @Prop({ type: [{ type: String }] })

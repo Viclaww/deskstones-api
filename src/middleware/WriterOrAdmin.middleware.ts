@@ -1,7 +1,7 @@
 import { Injectable, NestMiddleware, ForbiddenException } from '@nestjs/common';
 
 @Injectable()
-export class WriterMiddleware implements NestMiddleware {
+export class WriterOrAddminMiddleware implements NestMiddleware {
   async use(req: any, res: any, next: () => void) {
     if (!req.user || req.user.role !== 'writer' || req.user.role !== 'admin') {
       throw new ForbiddenException(

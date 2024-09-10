@@ -1,6 +1,16 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Query,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common';
 import { BlogService } from './post.service';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('posts')
 export class PostController {
@@ -8,20 +18,32 @@ export class PostController {
     private readonly postService: BlogService,
     private cloudinaryService: CloudinaryService,
   ) {}
+
   @Get()
-  async getPosts() {
-    return this.postService.findAll();
+  async getPostByCategory(@Query('category') category: string) {
+    if (!category) {
+      return this.postService.findAll();
+    }
+    return this.postService.findManyByCategory(category);
   }
+
+  @Get('categories')
+  async getCategories() {
+    return this.postService.getAllCategories();
+  }
+
   @Get(':slug')
-  async getPost(@Param() slug: string) {
-    console.log(slug);
+  async getPost(@Param('slug') slug: string) {
     return this.postService.findbySlug(slug);
   }
 
   @Post('create')
-  async createPost(@Body() body: any) {
-    const imageData = await this.cloudinaryService.uploadFile(body.image);
-
+  @UseInterceptors(FileInterceptor('image'))
+  async createPost(
+    @Body() body: any,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    const imageData = await this.cloudinaryService.uploadFile(file);
     return this.postService.create({
       title: body.title,
       description: body.description,
@@ -29,11 +51,5 @@ export class PostController {
       categories: body.categories,
       content: body.content,
     });
-  }
-
-  @Get()
-  async getPostByCategory(@Query('category') category: string) {
-    console.log(category);
-    return this.postService.findManyByCategory(category);
   }
 }

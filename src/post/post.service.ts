@@ -6,7 +6,7 @@ import { CreateBlogDto } from './dto';
 
 @Injectable()
 export class BlogService {
-  constructor(@InjectModel(Blog.name) private blogModel: Model<Blog>) {}
+  constructor(@InjectModel('blog') private blogModel: Model<Blog>) {}
 
   async checkSlug(slug: string): Promise<boolean> {
     const blog = await this.blogModel.findOne({ slug });
@@ -57,7 +57,23 @@ export class BlogService {
   }
 
   async findbySlug(slug: string): Promise<Blog> {
-    return this.blogModel.findOne({ slug }).populate('comments').exec();
+    const post = await this.blogModel
+      .findOne({ slug })
+      .populate('comments')
+      .exec();
+    if (!post) {
+      throw new NotFoundException('Blog not found');
+    }
+    return post;
+  }
+
+  async getAllCategories(): Promise<string[]> {
+    const posts = await this.blogModel.find({}, { categories: 1 }).exec(); // Fetch only categories field
+
+    // Flatten all categories into one array and remove duplicates
+    const categories = [...new Set(posts.flatMap((post) => post.categories))];
+
+    return categories;
   }
 
   async findManyByCategory(category: string): Promise<Blog[]> {
