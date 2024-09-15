@@ -22,9 +22,9 @@ export class PostController {
   @Get()
   async getPostByCategory(@Query('category') category: string) {
     if (!category) {
-      return this.postService.findAll();
+      return this.postService.getAllPublishedPosts();
     }
-    return this.postService.findManyByCategory(category);
+    return this.postService.getAllPublishedForaCategory(category);
   }
 
   @Get('categories')

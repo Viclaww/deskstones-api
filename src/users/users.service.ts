@@ -21,4 +21,8 @@ export class UsersService {
   async createUser(user: any) {
     return await this.user.create(user);
   }
+
+  async updateUser(id: string, role: any) {
+    return await this.user.findByIdAndUpdate(id, role, { new: true });
+  }
 }

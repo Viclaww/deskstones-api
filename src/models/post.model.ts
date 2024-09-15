@@ -20,11 +20,17 @@ export class Blog extends Document {
   @Prop({ default: false })
   published: boolean;
 
-  @Prop()
+  @Prop({ default: null })
   datePublished: Date;
 
   @Prop({ default: true })
   inReview: boolean;
+
+  @Prop({ default: false })
+  isRejected: boolean;
+
+  @Prop({ default: 0 })
+  likes: number;
 
   @Prop({ type: [{ type: String }] })
   categories: string[];
@@ -34,6 +40,9 @@ export class Blog extends Document {
 
   @Prop({ type: [{ type: Types.ObjectId, ref: 'Comment' }] })
   comments: Comment[];
+
+  @Prop({ default: undefined })
+  rejectionMessage: string;
 }
 
 export const BlogSchema = SchemaFactory.createForClass(Blog);

@@ -12,6 +12,8 @@ import { PostModule } from './post/post.module';
 import { AdminModule } from './admin/admin.module';
 import { CommentController } from './comment/comment.controller';
 import { ReplyController } from './reply/reply.controller';
+import { AdminService } from './admin/admin.service';
+import { AdminController } from './admin/admin.controller';
 
 @Module({
   imports: [
@@ -37,6 +39,7 @@ import { ReplyController } from './reply/reply.controller';
     PostController,
     CommentController,
     ReplyController,
+    AdminController,
   ],
 
   providers: [AppService, ConfigService],

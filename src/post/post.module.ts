@@ -17,6 +17,8 @@ import { BlogService } from './post.service';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { WriterOrAddminMiddleware } from 'src/middleware/WriterOrAdmin.middleware';
 import { JwtMiddleware } from 'src/middleware/auth.middleware';
+import { UsersService } from 'src/users/users.service';
+import { UserSchema } from 'src/models/user.model';
 
 @Module({
   imports: [
@@ -24,11 +26,18 @@ import { JwtMiddleware } from 'src/middleware/auth.middleware';
       { name: 'blog', schema: BlogSchema },
       { name: 'Comment', schema: CommentSchema },
       { name: 'Reply', schema: ReplySchema },
+      { name: 'User', schema: UserSchema },
     ]),
   ],
   controllers: [PostController, CommentController, ReplyController],
-  providers: [BlogService, CommentService, ReplyService, CloudinaryService],
-  exports: [BlogService, CommentService, ReplyService],
+  providers: [
+    BlogService,
+    UsersService,
+    CommentService,
+    ReplyService,
+    CloudinaryService,
+  ],
+  exports: [BlogService, CommentService, ReplyService, MongooseModule],
 })
 export class PostModule {
   configure(consumer: MiddlewareConsumer) {

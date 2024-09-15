@@ -45,6 +45,16 @@ export class BlogService {
     return this.blogModel.find().exec();
   }
 
+  async getAllPublishedPosts(): Promise<Blog[]> {
+    return this.blogModel.find({ published: true }).exec();
+  }
+
+  async getAllPublishedForaCategory(category: string): Promise<Blog[]> {
+    return this.blogModel
+      .find({ published: true, categories: { $in: [category] } })
+      .exec();
+  }
+
   async findOne(id: string): Promise<Blog> {
     const blog = await this.blogModel.findById(id).populate({
       path: 'comments',
@@ -75,16 +85,29 @@ export class BlogService {
 
     return categories;
   }
+  async deleteComment(commentId: string): Promise<any> {
+    return this.blogModel.updateOne(
+      { comments: { $in: [commentId] } },
+      { $pull: { comments: commentId } },
+    );
+  }
+
+  async deleteReply(replyId: string): Promise<any> {
+    return this.blogModel.updateOne(
+      { 'comments.replies': { $in: [replyId] } },
+      { $pull: { 'comments.$.replies': replyId } },
+    );
+  }
 
   async findManyByCategory(category: string): Promise<Blog[]> {
     return this.blogModel.find({ categories: { $in: [category] } }).exec();
   }
 
-  async update(id: string, updateBlogDto: any): Promise<Blog> {
+  async updateBlog(id: string, updateBlogDto: any): Promise<Blog> {
     return this.blogModel.findByIdAndUpdate(id, updateBlogDto, { new: true });
   }
 
-  async delete(id: string): Promise<any> {
+  async deleteBlog(id: string): Promise<any> {
     return this.blogModel.findByIdAndDelete(id);
   }
 }
